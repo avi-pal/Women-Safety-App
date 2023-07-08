@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:women_safety_app/utils/quotes.dart';
-import 'package:women_safety_app/widgets/safewebview.dart';
+import 'package:women_safety_app/widgets/home_widgets/safewebview.dart';
 
 class CustomCarousel extends StatelessWidget {
   const CustomCarousel({super.key});
