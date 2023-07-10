@@ -5,6 +5,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:women_safety_app/widgets/home_widgets/CustomCarousel.dart';
 import 'package:women_safety_app/widgets/home_widgets/custom_appBar.dart';
+import 'package:women_safety_app/widgets/home_widgets/safehome/SafeHome.dart';
+import 'package:women_safety_app/widgets/live_safe.dart';
 import 'package:women_safety_app/widgets/home_widgets/emergency.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,13 +49,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )),
-                    Emergency(),
+                Emergency(),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Explore LiveSafe",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    )),
+                LiveSafe(),
+                SafeHome(),
               ]))
-              
             ],
           ),
         ),
-        
       ),
     );
   }

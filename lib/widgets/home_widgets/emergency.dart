@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'emargencies/ambulanceemargency.dart';
-import 'emargencies/firebrigadeemargency.dart';
-import 'emargencies/policeemargency.dart';
+import 'emergencies/ambulanceemargency.dart';
+import 'emergencies/firebrigadeemargency.dart';
+import 'emergencies/policeemargency.dart';
 
 class Emergency extends StatelessWidget {
   const Emergency({super.key});
