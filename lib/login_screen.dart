@@ -6,8 +6,22 @@ import 'components/custom_textfield.dart';
 import 'components/primaryButton.dart';
 import 'components/secondaryButton.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isPasswordShown = false;
+  final _formKey = GlobalKey<FormState>();
+  final _formData = Map<String,Object>();
+
+
+  _onSubmit(){
+    _formKey.currentState!.save();
+    print(_formData['email']);
+    print(_formData['password']);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +29,12 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height*0.3,
-                child: Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height*0.3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -35,40 +50,80 @@ class LoginScreen extends StatelessWidget {
                     ]
                   ),
                 ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height*0.5,
-                child: Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Container(
+                  height: MediaQuery.of(context).size.height*0.5,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextField(
+                          hintText: "Enter Email",
+                          isPassword: false,
+                          textInputAction:TextInputAction.next,
+                          keyboardType: TextInputType.emailAddress,
+                          prefix: Icon(Icons.person),
+                          onsave: (email){
+                            _formData['email'] = email ?? "";
+                          },
+                          validate: (email){
+                            if(
+                              email!.isEmpty||
+                              email.length<3||
+                              !email.contains("@")
+                            ){
+                              return 'enter correct email';
+                            }
+                          },
+                        ),
+                        CustomTextField(
+                          hintText: "Enter Password",
+                          isPassword: isPasswordShown,
+                          prefix: Icon(Icons.vpn_key_rounded),
+                          onsave: (password){
+                            _formData['password'] = password ?? "";
+                          },
+                           validate: (password){
+                              if(
+                                password!.isEmpty||
+                                password.length<7
+                              ){
+                                return 'enter correct password';
+                              }
+                           },
+                          suffix: IconButton(onPressed: (){
+                            setState(() {
+                              isPasswordShown = !isPasswordShown;
+                            });
+                            
+                          }, icon: isPasswordShown?Icon(Icons.visibility_off):Icon(Icons.visibility)
+                          ),
+                          
+                        ),
+                        PrimaryButton(title: 'REGISTER', onPressed: (){
+                          if(_formKey.currentState!.validate()){
+                            _onSubmit();
+                          }
+                        },),
+                      ]
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomTextField(
-                        hintText: "enter name",
-                        prefix: Icon(Icons.person),
+                      Text(
+                          "Forgot Password",
+                          style: TextStyle(fontSize: 18),
                       ),
-                      CustomTextField(
-                        hintText: "enter Password",
-                        prefix: Icon(Icons.person),
-                      ),
-                      PrimaryButton(title: 'REGISTER', onPressed: (){},),
+                      SecondaryButton(title: 'Click here',onPressed:(){}),
                     ]
                   ),
                 ),
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        "Forgot Password",
-                        style: TextStyle(fontSize: 18),
-                    ),
-                    SecondaryButton(title: 'Click here',onPressed:(){}),
-                  ]
-                ),
-              ),
-              SecondaryButton(title: 'Register new user',onPressed:(){}),
-            ],
+                SecondaryButton(title: 'Register new user',onPressed:(){}),
+              ],
+            ),
           )
         )
       ),
