@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _onSubmit() async {
     _formKey.currentState!.save();
+    progressIndicator(context);
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
@@ -28,8 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
               password: "SuperSecretPassword!");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        dialogueBox(context, "User not found");
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
+        dialogueBox(context, "Wrong password");
         print('Wrong password provided for that user.');
       }
     }
@@ -116,10 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               PrimaryButton(
                                 title: 'LOGIN',
                                 onPressed: () {
-                                  // if (_formKey.currentState!.validate()) {
-                                  //   _onSubmit();
-                                  // }
-                                  progressIndicator(context);
+                                  if (_formKey.currentState!.validate()) {
+                                    _onSubmit();
+                                  }
+                                  //progressIndicator(context);
                                 },
                               ),
                             ]),
