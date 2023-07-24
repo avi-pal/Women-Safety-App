@@ -18,14 +18,11 @@ dialogueBox(BuildContext context, String text) {
   );
 }
 
-progressIndicator(BuildContext context) {
-  showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => Center(
+Widget progressIndicator(BuildContext context) {
+  return Center(
               child: CircularProgressIndicator(
             backgroundColor: primaryColor,
             color: Color.fromARGB(255, 193, 182, 182),
             strokeWidth: 7,
-          )));
+          ));
 }
