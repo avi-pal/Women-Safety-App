@@ -23,30 +23,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: GoogleFonts.firaSansTextTheme(Theme.of(context).textTheme),
-        primarySwatch: Colors.blue,
-      ),
-      home:FutureBuilder(
-        
-        future: MySharedPreference.getUserType(),
-
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          if(snapshot.data == ""){
-            return LoginScreen();
-          }
-          if(snapshot.data == "child"){
-            return BottomPage();
-          }
-          if(snapshot.data == "parent"){
-            return ParentHomeScreen();
-          }
-          return progressIndicator(context);
-        }
-       ) //home: webv(),
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: GoogleFonts.firaSansTextTheme(Theme.of(context).textTheme),
+          primarySwatch: Colors.blue,
+        ),
+        home: FutureBuilder(
+            future: MySharedPreference.getUserType(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.data == "") {
+                return LoginScreen();
+              }
+              if (snapshot.data == "child") {
+                return BottomPage();
+              }
+              if (snapshot.data == "parent") {
+                return ParentHomeScreen();
+              }
+              return progressIndicator(context);
+            }) //home: webv(),
+        );
   }
 }
 
@@ -88,3 +85,4 @@ class MyApp extends StatelessWidget {
 //     );
 //   }
 // }
+
