@@ -5,6 +5,8 @@ import 'package:women_safety_app/child/bottom_screens/contacts_page.dart';
 import 'package:women_safety_app/child/bottom_screens/profile_page.dart';
 import 'package:women_safety_app/child/bottom_screens/review_page.dart';
 
+import 'bottom_screens/add_contacts.dart';
+
 class BottomPage extends StatefulWidget {
   const BottomPage({super.key});
 
@@ -16,7 +18,7 @@ class _BottomPageState extends State<BottomPage> {
     int currentIndex = 0;
   List<Widget> pages = [
     HomeScreen(),
-    ContactsPage(),
+    AddContactsPage(),
     ChatPage(),
     ProfilePage(),
     ReviewPage(),
