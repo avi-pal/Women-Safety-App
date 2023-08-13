@@ -17,6 +17,13 @@ class _SafeHomeState extends State<SafeHome> {
   String? _curentAddress;
   LocationPermission? permission;
 
+  @override
+  void initState() {
+    super.initState();
+  
+    _getCurrentLocation();
+  }
+
   _isPermissionGranted() async => await Permission.sms.status.isGranted;
   _sendSms(String phoneNumber, String message, {int? simSlot}) async {
     SmsStatus result = await BackgroundSms.sendMessage(
@@ -57,7 +64,6 @@ class _SafeHomeState extends State<SafeHome> {
     }
     return true;
   }
-  
 
   _getCurrentLocation() async {
     final hasPermission = await _handleLocationPermission();
@@ -89,13 +95,6 @@ class _SafeHomeState extends State<SafeHome> {
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getCurrentLocation();
   }
 
   showModelSafeHome(BuildContext context) {
