@@ -24,10 +24,22 @@ class _SafeHomeState extends State<SafeHome> {
     _getCurrentLocation();
   }
 
-  _isPermissionGranted() async => await Permission.sms.status.isGranted;
+//  _sendMessage(String phoneNumber, String message, {int? simSlot}) async {
+//     var result = await BackgroundSms.sendMessage(
+//         phoneNumber: phoneNumber, message: message, simSlot: simSlot);
+//     if (result == SmsStatus.sent) {
+//       print("Sent");
+//     } else {
+//       print("Failed");
+//     }
+//   }
+
+
+  _isPermissionGranted() async => await Permission.sms.isGranted;
+
   _sendSms(String phoneNumber, String message, {int? simSlot}) async {
-    SmsStatus result = await BackgroundSms.sendMessage(
-        phoneNumber: phoneNumber, message: message, simSlot: 1);
+    var result = await BackgroundSms.sendMessage(
+        phoneNumber: phoneNumber, message: message, simSlot: simSlot);
     if (result == SmsStatus.sent) {
       print("Sent");
       Fluttertoast.showToast(msg: "send");
@@ -123,27 +135,33 @@ class _SafeHomeState extends State<SafeHome> {
                 SizedBox(height: 10),
                 PrimaryButton(
                     title: "SEND ALERT",
+
                     onPressed: () async {
-                      String recipients = "";
                       List<TContact> contactList =
                           await DatabaseHelper().getContactList();
                       print(contactList.length);
+                      
                       if (contactList.isEmpty) {
                         Fluttertoast.showToast(
                             msg: "emergency contact is empty");
                       } else {
+                        // _sendSms("09163318729", "Hello", simSlot: 1);
                         String messageBody =
                             "https://www.google.com/maps/search/?api=1&query=${_curentPosition!.latitude}%2C${_curentPosition!.longitude}. $_curentAddress";
 
+                        print("Hello1");
                         if (await _isPermissionGranted()) {
+                          print("Hello");
                           contactList.forEach((element) {
+                            print(element.number);
                             _sendSms("${element.number}",
-                                "i am in trouble $messageBody");
+                                "i am in trouble $messageBody",simSlot: 1);
                           });
                         } else {
-                          Fluttertoast.showToast(msg: "something wrong");
+                          Fluttertoast.showToast(msg: "permission required");
+                          Permission.sms.request();
                         }
-                      }
+                     }
                     }),
               ],
             ),
