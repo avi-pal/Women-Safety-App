@@ -7,7 +7,7 @@ import 'package:women_safety_app/model/contactsm.dart';
 import 'package:women_safety_app/utils/constants.dart';
 
 class ContactsPage extends StatefulWidget {
-  const ContactsPage({super.key});
+  const ContactsPage({Key? key}) : super(key: key);
 
   @override
   State<ContactsPage> createState() => _ContactsPageState();
@@ -17,6 +17,7 @@ class _ContactsPageState extends State<ContactsPage> {
   List<Contact> contacts = [];
   List<Contact> contactsFiltered = [];
   DatabaseHelper _databaseHelper = DatabaseHelper();
+  bool isSearchIng = false;
 
   TextEditingController searchController = TextEditingController();
   @override
@@ -38,7 +39,9 @@ class _ContactsPageState extends State<ContactsPage> {
       _contacts.retainWhere((element) {
         String searchTerm = searchController.text.toLowerCase();
         String searchTermFlattren = flattenPhoneNumber(searchTerm);
-        String contactName = element.displayName!.toLowerCase();
+        String? contactName = element.displayName; //!.toLowerCase();
+        if (contactName == null) return false;
+        contactName = contactName.toLowerCase();
         bool nameMatch = contactName.contains(searchTerm);
         if (nameMatch == true) {
           return true;
@@ -47,13 +50,14 @@ class _ContactsPageState extends State<ContactsPage> {
           return false;
         }
         var phone = element.phones!.firstWhere((p) {
-          String phnFlattered = flattenPhoneNumber(p.value!);
-          return phnFlattered.contains(searchTermFlattren);
+          String phnFLattered = flattenPhoneNumber(p.value!);
+          return phnFLattered.contains(searchTermFlattren);
         });
         return phone.value != null;
       });
     }
     setState(() {
+      isSearchIng = true;
       contactsFiltered = _contacts;
     });
   }
@@ -66,18 +70,11 @@ class _ContactsPageState extends State<ContactsPage> {
         filterContact();
       });
     } else {
-      handleInvalidPermissions(permissionStatus) {}
+      handInvaliedPermissions(permissionStatus);
     }
   }
 
-  getAllContacts() async {
-    List<Contact> _contacts = await ContactsService.getContacts();
-    setState(() {
-      contacts = _contacts;
-    });
-  }
-
-  handleInvalidPermissions(PermissionStatus permissionStatus) {
+  handInvaliedPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
       dialogueBox(context, "Access to the contacts denied by the user");
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
@@ -96,15 +93,23 @@ class _ContactsPageState extends State<ContactsPage> {
     }
   }
 
+  getAllContacts() async {
+    List<Contact> _contacts =
+        await ContactsService.getContacts(withThumbnails: false);
+    setState(() {
+      contacts = _contacts;
+      print(contacts);
+      print(contacts.length);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isSearching = searchController.text.isNotEmpty;
+    //bool isSearchIng = searchController.text.isNotEmpty;
     bool listItemExit = (contactsFiltered.length > 0 || contacts.length > 0);
     return Scaffold(
       body: contacts.length == 0
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Center(child: CircularProgressIndicator())
           : SafeArea(
               child: Column(
                 children: [
@@ -114,23 +119,24 @@ class _ContactsPageState extends State<ContactsPage> {
                       autofocus: true,
                       controller: searchController,
                       decoration: InputDecoration(
-                          labelText: "search content",
+                          labelText: "search contact",
                           prefixIcon: Icon(Icons.search)),
                     ),
                   ),
                   listItemExit == true
                       ? Expanded(
                           child: ListView.builder(
-                            itemCount: isSearching == true
+                            itemCount: isSearchIng == true
                                 ? contactsFiltered.length
                                 : contacts.length,
                             itemBuilder: (BuildContext context, int index) {
-                              Contact contact = isSearching == true
+                              Contact contact = isSearchIng == true
                                   ? contactsFiltered[index]
                                   : contacts[index];
                               return ListTile(
-                                title: Text(contact.displayName!),
-                                subtitle: Text(contact.phones!.first.value!),
+                                title: Text(contact.displayName ?? ""),
+                                // subtitle:Text(contact.phones!.elementAt(0)
+                                // .value!) ,
                                 leading: contact.avatar != null &&
                                         contact.avatar!.length > 0
                                     ? CircleAvatar(
@@ -140,19 +146,21 @@ class _ContactsPageState extends State<ContactsPage> {
                                       )
                                     : CircleAvatar(
                                         backgroundColor: primaryColor,
-                                        child: Text(
-                                          contact.initials(),
-                                        ),
+                                        child: Text(contact.initials()),
                                       ),
+
                                 onTap: () {
-                                  if (contact.phones!.length > 0) {
+                                  if (contact.phones != null &&
+                                      contact.phones!.length > 0) {
                                     final String phoneNum =
                                         contact.phones!.elementAt(0).value!;
-                                    final String name = contact.displayName!;
+                                    final String name =
+                                        contact.displayName ?? "";
                                     _addContact(TContact(phoneNum, name));
                                   } else {
                                     Fluttertoast.showToast(
-                                        msg: "Oops! Number does not exist!!");
+                                        msg:
+                                            "Oops! phone number of this contact does not exist");
                                   }
                                 },
                               );
@@ -160,8 +168,8 @@ class _ContactsPageState extends State<ContactsPage> {
                           ),
                         )
                       : Container(
-                          child: Text("Searching"),
-                        )
+                          child: Text("searching"),
+                        ),
                 ],
               ),
             ),
@@ -171,9 +179,9 @@ class _ContactsPageState extends State<ContactsPage> {
   void _addContact(TContact newContact) async {
     int result = await _databaseHelper.insertContact(newContact);
     if (result != 0) {
-      Fluttertoast.showToast(msg: "contacts added successfully");
+      Fluttertoast.showToast(msg: "contact added successfully");
     } else {
-      Fluttertoast.showToast(msg: "failed to add contacts");
+      Fluttertoast.showToast(msg: "Failed to add contacts");
     }
     Navigator.of(context).pop(true);
   }
