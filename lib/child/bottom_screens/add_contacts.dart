@@ -81,7 +81,7 @@ class _AddContactsPageState extends State<AddContactsPage> {
                             IconButton(
                                 onPressed: () async {
                                   await FlutterPhoneDirectCaller.callNumber(
-                                      contactList![index].number);
+                                      contactList!g[index].number);
                                 },
                                 icon: Icon(
                                   Icons.call,
