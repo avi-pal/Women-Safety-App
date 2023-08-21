@@ -24,17 +24,6 @@ class _SafeHomeState extends State<SafeHome> {
     _getCurrentLocation();
   }
 
-//  _sendMessage(String phoneNumber, String message, {int? simSlot}) async {
-//     var result = await BackgroundSms.sendMessage(
-//         phoneNumber: phoneNumber, message: message, simSlot: simSlot);
-//     if (result == SmsStatus.sent) {
-//       print("Sent");
-//     } else {
-//       print("Failed");
-//     }
-//   }
-
-
   _isPermissionGranted() async => await Permission.sms.isGranted;
 
   _sendSms(String phoneNumber, String message, {int? simSlot}) async {

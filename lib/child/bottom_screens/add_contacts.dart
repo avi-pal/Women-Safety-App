@@ -1,3 +1,4 @@
+import 'package:direct_caller_sim_choice/direct_caller_sim_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -79,9 +80,10 @@ class _AddContactsPageState extends State<AddContactsPage> {
                         child: Row(
                           children: [
                             IconButton(
-                                onPressed: () async {
-                                  await FlutterPhoneDirectCaller.callNumber(
-                                      contactList![index].number);
+                                onPressed: ()  {
+                                   DirectCaller().makePhoneCall(contactList[index].number);
+                                  //await FlutterPhoneDirectCaller.callNumber(
+                                  //    contactList[index].number);
                                 },
                                 icon: Icon(
                                   Icons.call,
