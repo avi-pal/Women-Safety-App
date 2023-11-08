@@ -7,12 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:women_safety_app/child/child_login_screen.dart';
 import 'package:women_safety_app/parent/parent_home_screen.dart';
 import 'package:women_safety_app/utils/constants.dart';
+import 'package:women_safety_app/utils/flutter_background_services.dart';
 import 'package:women_safety_app/widgets/home_widgets/safewebview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await MySharedPreference.init();
+  await initializeService();
   runApp(const MyApp());
 }
 

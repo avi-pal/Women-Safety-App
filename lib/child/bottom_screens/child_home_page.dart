@@ -149,21 +149,21 @@ class _HomeScreenState extends State<HomeScreen> {
     getRandomQuote();
     super.initState();
     ///////shake features///////
-    ShakeDetector.autoStart(
-      onPhoneShake: () {
-        _getAndSendSms();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Shake!'),
-          ),
-        );
-        // Do stuff on phone shake
-      },
-      minimumShakeCount: 2,
-      shakeSlopTimeMS: 500,
-      shakeCountResetTime: 3000,
-      shakeThresholdGravity: 2.7,
-    );
+    // ShakeDetector.autoStart(
+    //   onPhoneShake: () {
+    //     _getAndSendSms();
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text('Shake!'),
+    //       ),
+    //     );
+    //     // Do stuff on phone shake
+    //   },
+    //   minimumShakeCount: 2,
+    //   shakeSlopTimeMS: 500,
+    //   shakeCountResetTime: 3000,
+    //   shakeThresholdGravity: 2.7,
+    // );
   }
 
   @override
